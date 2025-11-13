@@ -197,10 +197,16 @@ Below is a high-level description of the Median Cut pipeline:
       <td><b>OKLAB (8 colors)</b></td>
     </tr>
     <tr>
-      <td><img src="images/tests/lion_original.png" width="250"></td>
-      <td><img src="images/tests/lion_MedianCut%5BRGB;RED;NONE;NONE;8%5D.png" width="250"></td>
-      <td><img src="images/tests/lion_MedianCut%5BHSL;LIGHTNESS;NONE;NONE;8%5D.png" width="250"></td>
-      <td><img src="images/tests/lion_MedianCut%5BOKLAB;L;NONE;NONE;8%5D.png" width="250"></td>
+      <td><img src="images/examples/pexels-agk42-2816903.jpg" alt="Input"></td>
+      <td><img src="images/examples/pexels-agk42-2816903_MedianCut%5BRGB;RED;NONE;NONE;8%5D.png" alt="RGB Quantized 8"></td>
+      <td><img src="images/examples/pexels-agk42-2816903_MedianCut%5BHSL;LIGHTNESS;NONE;NONE;8%5D.png" alt="HSL Quantized 8"></td>
+      <td><img src="images/examples/pexels-agk42-2816903_MedianCut%5BOKLAB;L;NONE;NONE;8%5D.png" alt="OKLAB Quantized 8"></td>
+    </tr>
+    <tr>
+      <td><img src="images/examples/pexels-belle-co-99483-402028.jpg" alt="Input"></td>
+      <td><img src="images/examples/pexels-belle-co-99483-402028_MedianCut%5BRGB;RED;NONE;NONE;8%5D.png" alt="RGB Quantized 8"></td>
+      <td><img src="images/examples/pexels-belle-co-99483-402028_MedianCut%5BHSL;LIGHTNESS;NONE;NONE;8%5D.png" alt="HSL Quantized 8"></td>
+      <td><img src="images/examples/pexels-belle-co-99483-402028_MedianCut%5BOKLAB;L;NONE;NONE;8%5D.png" alt="OKLAB Quantized 8"></td>
     </tr>
   </table>
 </p>
