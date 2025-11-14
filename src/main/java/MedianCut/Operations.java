@@ -10,6 +10,7 @@ import Data.Models.OperationEnum;
 import Data.Pixel;
 import FileManager.PngReader;
 import FileManager.PngSaver;
+import MedianCut.PaletteCreator.PaletteImageCreator;
 import Windows.ImageViewer;
 
 import static Util.Timing.measure;
@@ -90,12 +91,14 @@ public class Operations {
             PixelSorter.sort(convertedPixels, config.operation, config.order);
             return null;
         });
-
+        
         // 4) Median Cut quantization
         List<Pixel> palette = measure("Applying Median Cut for " + config.buckets + " buckets", () -> MedianCut.quantize(convertedPixels, config.buckets, config.operation));
 
         // 5) Convert palette back to RGBA integers
         int[] convertedPalette = measure("Converting back from Color Space " + config.operation, () -> ColorSpaceConverter.toRgba(palette, config.operation));
+        
+        testPalette(convertedPalette, filePath);
 
         // 6) Build KD-tree from palette for fast nearest-color lookup
         KdTreeRGB kdt = new KdTreeRGB(convertedPalette);
@@ -118,6 +121,14 @@ public class Operations {
         System.out.println("- Displaying result");
         new ImageViewer(finalImage, filePath, this);
         System.out.println("FINISHED PROCESS\n");
+    }
+    
+    private void testPalette(int[] rgba, String filePath) {
+        BufferedImage testPaletteAfter = measure("Creating palette image", () -> {
+            return PaletteImageCreator.createPalette(rgba);
+        });
+        
+        new ImageViewer(testPaletteAfter, filePath, this);
     }
 
     /**

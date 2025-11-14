@@ -37,4 +37,5 @@ FileManager/PngSaver.class
 FileManager/PngConverter.class
 MedianCut/ConverterPlugins/OkLabPlugin.class
 MedianCut/ConverterPlugins/HslPlugin.class
+MedianCut/PaletteCreator/PaletteImageCreator.class
 MedianCut/Operations.class

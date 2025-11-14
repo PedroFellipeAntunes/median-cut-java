@@ -43,13 +43,13 @@ public class BucketCircular extends Bucket {
         List<Pixel> sub = pixels.subList(start, end);
 
         // 1) sort by normalized hue (0..1)
-        sub.sort(Comparator.comparingDouble(p -> normalizeHue(p.values[0])));
+        sub.sort(Comparator.comparingDouble(p -> p.values[0]));
 
         int n = size;
         double[] h = new double[n];
         
         for (int i = 0; i < n; i++) {
-            h[i] = normalizeHue(sub.get(i).values[0]);
+            h[i] = sub.get(i).values[0];
         }
 
         // 2) find largest gap (including circular gap between last and first)
@@ -121,7 +121,7 @@ public class BucketCircular extends Bucket {
             
             if (w > 0) anyWeight = true;
             
-            double theta = normalizeHue(p.values[0]) * 2.0 * Math.PI;
+            double theta = p.values[0] * 2.0 * Math.PI;
             sumCos += w * Math.cos(theta);
             sumSin += w * Math.sin(theta);
             totalWeight += w;
@@ -134,7 +134,7 @@ public class BucketCircular extends Bucket {
             sumSin = 0.0;
             
             for (int i = start; i < end; i++) {
-                double theta = normalizeHue(pixels.get(i).values[0]) * 2.0 * Math.PI;
+                double theta = pixels.get(i).values[0] * 2.0 * Math.PI;
                 sumCos += Math.cos(theta);
                 sumSin += Math.sin(theta);
             }
@@ -194,7 +194,7 @@ public class BucketCircular extends Bucket {
             
             if (w > 0) anyWeight = true;
             
-            double theta = normalizeHue(p.values[0]) * 2.0 * Math.PI;
+            double theta = p.values[0] * 2.0 * Math.PI;
             sumCos += w * Math.cos(theta);
             sumSin += w * Math.sin(theta);
             totalWeight += w;
@@ -207,7 +207,7 @@ public class BucketCircular extends Bucket {
             sumSin = 0.0;
             
             for (int i = start; i < end; i++) {
-                double theta = normalizeHue(pixels.get(i).values[0]) * 2.0 * Math.PI;
+                double theta = pixels.get(i).values[0] * 2.0 * Math.PI;
                 sumCos += Math.cos(theta);
                 sumSin += Math.sin(theta);
             }
@@ -271,13 +271,5 @@ public class BucketCircular extends Bucket {
         }
 
         return var;
-    }
-
-    private static double normalizeHue(double h) {
-        h = h % 1.0;
-        
-        if (h < 0.0) h += 1.0;
-        
-        return h;
     }
 }

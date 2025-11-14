@@ -22,6 +22,7 @@
 /home/pfca/NetBeansProjects/Median Cut/src/main/java/MedianCut/Operations.java
 /home/pfca/NetBeansProjects/Median Cut/src/main/java/MedianCut/PaletteCreator/ColorSpaceConverter.java
 /home/pfca/NetBeansProjects/Median Cut/src/main/java/MedianCut/PaletteCreator/MedianCut.java
+/home/pfca/NetBeansProjects/Median Cut/src/main/java/MedianCut/PaletteCreator/PaletteImageCreator.java
 /home/pfca/NetBeansProjects/Median Cut/src/main/java/MedianCut/PaletteCreator/PaletteToImage.java
 /home/pfca/NetBeansProjects/Median Cut/src/main/java/MedianCut/PaletteCreator/PixelSorter.java
 /home/pfca/NetBeansProjects/Median Cut/src/main/java/Util/Main.java
