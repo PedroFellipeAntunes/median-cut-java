@@ -208,6 +208,12 @@ Below is a high-level description of the Median Cut pipeline:
       <td><img src="images/examples/pexels-belle-co-99483-402028_MedianCut%5BHSL;LIGHTNESS;NONE;NONE;8%5D.png" alt="HSL Quantized 8"></td>
       <td><img src="images/examples/pexels-belle-co-99483-402028_MedianCut%5BOKLAB;L;NONE;NONE;8%5D.png" alt="OKLAB Quantized 8"></td>
     </tr>
+    <tr>
+      <td><img src="images/examples/pexels-chevanon-1335971.jpg" alt="Input"></td>
+      <td><img src="images/examples/pexels-chevanon-1335971_MedianCut%5BRGB;RED;NONE;NONE;8%5D.png" alt="RGB Quantized 8"></td>
+      <td><img src="images/examples/pexels-chevanon-1335971_MedianCut%5BHSL;LIGHTNESS;NONE;NONE;8%5D.png" alt="HSL Quantized 8"></td>
+      <td><img src="images/examples/pexels-chevanon-1335971_MedianCut%5BOKLAB;L;NONE;NONE;8%5D.png" alt="OKLAB Quantized 8"></td>
+    </tr>
   </table>
 </p>
 
