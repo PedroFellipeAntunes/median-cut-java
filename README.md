@@ -192,9 +192,9 @@ Below is a high-level description of the Median Cut pipeline:
   <table align="center">
     <tr>
       <td><b>Input</b></td>
-      <td><b>RGB (8 colors)</b></td>
-      <td><b>HSL (8 colors)</b></td>
-      <td><b>OKLAB (8 colors)</b></td>
+      <td><b>RGB Red Sorted (8 colors)</b></td>
+      <td><b>HSL Lightness Sorted (8 colors)</b></td>
+      <td><b>OKLAB L Sorted (8 colors)</b></td>
     </tr>
     <tr>
       <td><img src="images/examples/pexels-agk42-2816903.jpg" alt="Input"></td>
