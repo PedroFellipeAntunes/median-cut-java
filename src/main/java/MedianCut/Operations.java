@@ -98,8 +98,6 @@ public class Operations {
         // 5) Convert palette back to RGBA integers
         int[] convertedPalette = measure("Converting back from Color Space " + config.operation, () -> ColorSpaceConverter.toRgba(palette, config.operation));
         
-        testPalette(convertedPalette, filePath);
-
         // 6) Build KD-tree from palette for fast nearest-color lookup
         KdTreeRGB kdt = new KdTreeRGB(convertedPalette);
 
@@ -111,11 +109,14 @@ public class Operations {
             System.out.println("- Display skip");
             
             if (save) {
+//                testPalette(convertedPalette, filePath);
                 saveImage(finalImage, filePath);
             }
             
             return;
         }
+        
+//        testPalette(convertedPalette, filePath);
 
         // 9) Display the final image in the viewer
         System.out.println("- Displaying result");

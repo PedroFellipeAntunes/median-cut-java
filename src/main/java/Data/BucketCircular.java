@@ -37,62 +37,73 @@ public class BucketCircular extends Bucket {
      */
     @Override
     public Bucket[] split() {
-        if (size <= 1) return new Bucket[]{this, null};
+        if (size <= 1) {
+            return new Bucket[]{this, null};
+        }
 
         // Work on the view of the shared list
         List<Pixel> sub = pixels.subList(start, end);
 
-        // 1) sort by normalized hue (0..1)
-        sub.sort(Comparator.comparingDouble(p -> p.values[0]));
+        // 1) build a temporary copy and sort by normalized hue (0..1) on the copy
+        List<Pixel> sorted = new ArrayList<>(sub);
+        sorted.sort(Comparator.comparingDouble(p -> p.values[0]));
 
-        int n = size;
+        int n = sorted.size();
         double[] h = new double[n];
-        
+
         for (int i = 0; i < n; i++) {
-            h[i] = sub.get(i).values[0];
+            h[i] = sorted.get(i).values[0];
         }
 
         // 2) find largest gap (including circular gap between last and first)
         double maxGap = -1.0;
         int maxGapIndex = -1; // gap located between h[i] and h[(i+1)%n]
-        
+
         for (int i = 0; i < n; i++) {
             double cur = h[i];
             double next = h[(i + 1) % n];
             double gap;
-            
+
             if (i < n - 1) {
                 gap = next - cur;
             } else {
                 // circular gap from last to first: first + 1.0 - last
                 gap = (h[0] + 1.0) - cur;
             }
-            
-            if (gap < 0) gap += 1.0;
-            
+
+            if (gap < 0) {
+                gap += 1.0;
+            }
+
             if (gap > maxGap) {
                 maxGap = gap;
                 maxGapIndex = i;
             }
         }
 
-        // 3) rotate the sublist so that the largest gap lies between end and start.
-        // If the largest gap is already the circular boundary (i == n-1), no rotation needed.
-        if (maxGapIndex != n - 1) {
+        // 3) rotate the sorted copy so that the largest gap lies between end and start.
+        //    do this only on the temporary 'sorted' list; do NOT write back into the shared sublist.
+        List<Pixel> rotated = new ArrayList<>(n);
+        if (maxGapIndex == n - 1) {
+            // already has largest gap at circular boundary: no rotation needed
+            rotated.addAll(sorted);
+        } else {
             int cut = (maxGapIndex + 1);
-            // create a temporary copy and write rotated order back into the sublist
-            List<Pixel> temp = new ArrayList<>(sub);
-            
             for (int i = 0; i < n; i++) {
-                sub.set(i, temp.get((cut + i) % n));
+                rotated.add(sorted.get((cut + i) % n));
             }
-            // After this operation, the ordering inside pixels[start:end] has been rotated in-place.
         }
 
-        // 4) now perform simple half/half split (contiguous ranges)
-        int mid = start + n / 2;
-        Bucket first = new BucketCircular(pixels, start, mid);
-        Bucket second = new BucketCircular(pixels, mid, end);
+        // 4) perform simple half/half split on the rotated temporary list
+        int mid = n / 2;
+
+        List<Pixel> firstList = new ArrayList<>(rotated.subList(0, mid));
+        List<Pixel> secondList = new ArrayList<>(rotated.subList(mid, n));
+
+        // Create new buckets based on the new temporary lists.
+        // Use public constructor that accepts a List<Pixel> (start/end constructors expect the list to be the same backing list).
+        Bucket first = new BucketCircular(firstList);
+        Bucket second = new BucketCircular(secondList);
 
         return new Bucket[]{first, second};
     }
