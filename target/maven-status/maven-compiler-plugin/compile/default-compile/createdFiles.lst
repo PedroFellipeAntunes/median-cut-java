@@ -1,9 +1,9 @@
 Data/Pixel.class
-Windows/DropDownWindow$5.class
 MedianCut/OperationTest.class
 MedianCut/PaletteCreator/PixelSorter.class
 Util/Main.class
 Data/KdTreeRGB$Node.class
+Windows/DropDownWindow$4$1.class
 Util/Timing.class
 MedianCut/PaletteCreator/PaletteToImage.class
 Windows/ImageViewer$ImagePanel.class
@@ -11,7 +11,6 @@ MedianCut/ConverterPlugins/ColorSpacePlugin.class
 Windows/ImageViewer.class
 MedianCut/ConverterPlugins/RgbPlugin.class
 Data/BucketCircular.class
-Windows/DropDownWindow$5$1.class
 Windows/DropDownWindow$2.class
 Data/Models/HsbOrderEnum.class
 MedianCut/ConverterPlugins/HsbPlugin.class
