@@ -99,7 +99,7 @@ public class Operations {
         int[] convertedPalette = measure("Converting back from Color Space " + config.operation, () -> ColorSpaceConverter.toRgba(palette, config.operation));
         
         // 6) Build KD-tree from palette for fast nearest-color lookup
-        KdTreeRGB kdt = new KdTreeRGB(convertedPalette);
+        KdTreeRGB kdt = measure("Building KD-Tree", () -> new KdTreeRGB(convertedPalette));
 
         // 7) Apply palette to the original image
         BufferedImage finalImage = measure("Applying Palette to Image", () -> PaletteToImage.apply(original, kdt));
