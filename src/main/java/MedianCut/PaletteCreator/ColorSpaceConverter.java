@@ -2,11 +2,7 @@ package MedianCut.PaletteCreator;
 
 import Data.Models.OperationEnum;
 import Data.Pixel;
-import MedianCut.ConverterPlugins.ColorSpacePlugin;
-import MedianCut.ConverterPlugins.HsbPlugin;
-import MedianCut.ConverterPlugins.HslPlugin;
-import MedianCut.ConverterPlugins.OkLabPlugin;
-import MedianCut.ConverterPlugins.RgbPlugin;
+import MedianCut.ConverterPlugins.*;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -14,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.IntStream;
 
 /**
  * Central color-space converter:
@@ -49,15 +49,18 @@ public final class ColorSpaceConverter {
     private ColorSpaceConverter() {}
 
     /**
-     * Convert the input image into a list of unique Pixels for the requested color space.
+     * Convert the input image into a list of unique Pixels for the requested
+     * color space using multithreading.
      *
-     * The returned list contains one Pixel instance per distinct color (according to Pixel.equals/hashCode).
-     * Each Pixel.count is incremented to reflect how many source pixels had the same value.
+     * The returned list contains one Pixel instance per distinct color
+     * (according to Pixel.equals/hashCode). Each Pixel.count is incremented to
+     * reflect how many source pixels had the same value.
      *
      * @param image source image (non-null)
      * @param space target color space enum (non-null)
      * @return list of unique Pixel instances (order not guaranteed)
-     * @throws IllegalArgumentException if image or space is null or no plugin is available
+     * @throws IllegalArgumentException if image or space is null or no plugin
+     * is available
      */
     public static List<Pixel> extract(BufferedImage image, OperationEnum space) {
         // Validate parameters
@@ -67,7 +70,7 @@ public final class ColorSpaceConverter {
 
         // Lookup converter plugin for the requested color space (e.g. RGB, HSL, OKLab)
         ColorSpacePlugin plugin = REGISTRY.get(space.name());
-        
+
         if (plugin == null) {
             throw new IllegalArgumentException("No converter for " + space);
         }
@@ -75,27 +78,24 @@ public final class ColorSpaceConverter {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        // Map used to deduplicate pixels; Pixel.equals/hashCode determine uniqueness
-        // (hashCode allows the HashMap to quickly identify identical colors)
-        Map<Pixel, Pixel> uniquePixels = new HashMap<>();
+        // Thread-safe map used to deduplicate pixels; Pixel.equals/hashCode determine uniqueness
+        ConcurrentMap<Pixel, Pixel> uniquePixels = new ConcurrentHashMap<>();
 
-        // Iterate over every pixel in the image
-        // Convert it to the target color space and count repeated colors
-        for (int y = 0; y < h; ++y) {
-            for (int x = 0; x < w; ++x) {
-                // Convert RGBA integer to Pixel (color-space representation)
-                Pixel p = plugin.fromRgba(image.getRGB(x, y));
+        // Iterate over every row in parallel
+        ForkJoinPool.commonPool().submit(()
+                -> IntStream.range(0, h).parallel().forEach(y -> {
+                    for (int x = 0; x < w; x++) {
+                        // Convert RGBA integer to Pixel (color-space representation)
+                        Pixel p = plugin.fromRgba(image.getRGB(x, y));
 
-                // Check if this color already exists in the map
-                Pixel existing = uniquePixels.get(p);
-                
-                if (existing != null) {
-                    existing.count++; // same color
-                } else {
-                    uniquePixels.put(p, p); // new unique color
-                }
-            }
-        }
+                        // Atomically check if this color already exists and update count
+                        uniquePixels.merge(p, p, (existing, newPixel) -> {
+                            existing.count++; // same color, increment count
+                            return existing;
+                        });
+                    }
+                })
+        ).join();
 
         // Return a list containing one Pixel per unique color (count preserved)
         return new ArrayList<>(uniquePixels.values());
